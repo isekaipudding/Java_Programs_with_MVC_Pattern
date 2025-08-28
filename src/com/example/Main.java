@@ -36,7 +36,7 @@ public class Main {
                     System.out.println();
                     System.out.println("[Introduce]");
                     System.out.println("- 이 프로젝트는 모듈형 메뉴 구조를 사용합니다.");
-                    System.out.println("- 현재 활성 프로그램: 1번 Calculator");
+                    System.out.println("- 현재 활성 프로그램 : 1번 Calculator");
                     System.out.println("- 추후 2번 프로그램 이상을 확장할 계획입니다.");
                     break;
                 }
@@ -49,7 +49,7 @@ public class Main {
                 }
 
                 case "exit": {
-                    // 종료 확인 루프: yes → 종료, no → 메뉴로 복귀, 기타 → 재질문
+                    // 종료 확인 루프 : yes -> 종료, no -> 메뉴로 복귀, 기타 -> 재질문
                     while (true) {
                         System.out.print("정말 종료하시겠습니까? (yes/no): ");
                         if (!scanner.hasNextLine()) {

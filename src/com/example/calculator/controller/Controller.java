@@ -1,30 +1,42 @@
 package com.example.calculator.controller;
 
 import com.example.calculator.model.DTO;
+import com.example.calculator.view.Terminal;
+import com.example.calculator.service.Functions;
+
 import java.util.Scanner;
 
 public class Controller {
-    public void run(Scanner Scanner) {
+
+    public void run(Scanner scanner) {
         DTO dto = new DTO();
+        Terminal term = new Terminal(scanner);
+        Functions fn = new Functions();
 
-        System.out.println("[Calculator] 간단 테스트: 두 정수의 합을 구합니다.");
+        term.showIntro();
 
-        System.out.print("첫 번째 정수: ");
-        if (!Scanner.hasNextLine()) return;
-        dto.setInputA(Scanner.nextLine().trim());
+        // 1) 연산 선택 (view 담당)
+        String op = term.askOperation();
+        if (op == null) return;
 
-        System.out.print("두 번째 정수: ");
-        if (!Scanner.hasNextLine()) return;
-        dto.setInputB(Scanner.nextLine().trim());
+        // 2) 두 수 입력 (view 담당, DTO에 세팅)
+        if (!term.readInputs(dto)) return;
 
+        // 3) service가 DTO를 파싱/연산/출력값 세팅 → view가 DTO로 출력
         try {
-            long a = Long.parseLong(dto.getInputA());
-            long b = Long.parseLong(dto.getInputB());
-            dto.setResult(String.valueOf(a + b));     // 계산 결과를 DTO에 저장
-            System.out.println("합: " + dto.getResult()); // DTO에서 꺼내 출력
+            switch (op) {
+                case "+": fn.plus(dto); term.showResult("합", dto); break;
+                case "-": fn.sub(dto);  term.showResult("차", dto); break;
+                case "*": fn.mul(dto);  term.showResult("곱", dto); break;
+                case "/": fn.div(dto);  term.showResult("나눗셈", dto); break;
+                default:  term.showInvalidOperation();              break;
+            }
         } catch (NumberFormatException e) {
-            dto.setResult(null); // 필요시 에러 상태 표시
-            System.out.println("정수를 입력해주세요.");
+            dto.setResult(null);
+            term.showInvalidInteger(dto);
+        } catch (ArithmeticException e) {
+            dto.setResult(null);
+            term.showDivideByZero();
         }
     }
 }
